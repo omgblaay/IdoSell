@@ -40,26 +40,52 @@
 
   scheduleNext();
 
-  /* Lamps: float toward the cursor (each at its own depth) and switch on when clicked. */
+  /* Lamps drift on their own, follow the cursor, and glow at staggered intervals. */
   const lamps = [...hero.querySelectorAll(".lamp")].map((el, i) => ({
     el,
     depth: [1.0, 0.7, 1.35][i] ?? 1,
+    manual: false,
     x: 0,
     y: 0,
     tx: 0,
     ty: 0,
   }));
 
-  lamps.forEach((lamp) => {
+  function setLampOn(lamp, on) {
+    lamp.el.setAttribute("aria-pressed", String(on));
+    lamp.el.setAttribute("aria-label", on ? "Wyłącz lampę" : "Włącz lampę");
+  }
+
+  lamps.forEach((lamp, i) => {
     lamp.el.addEventListener("click", () => {
       const on = lamp.el.getAttribute("aria-pressed") !== "true";
-      lamp.el.setAttribute("aria-pressed", String(on));
-      lamp.el.setAttribute("aria-label", on ? "Wyłącz lampę" : "Włącz lampę");
+      lamp.manual = true;
+      setLampOn(lamp, on);
     });
+
+    if (reduceMotion) return;
+
+    function scheduleGlow(first = false) {
+      const delay = first
+        ? 700 + i * 650 + Math.random() * 600
+        : 2600 + Math.random() * 3600;
+
+      setTimeout(() => {
+        if (!lamp.manual && current === 0 && !document.hidden) {
+          setLampOn(lamp, lamp.el.getAttribute("aria-pressed") !== "true");
+        }
+        if (!lamp.manual) scheduleGlow();
+      }, delay);
+    }
+
+    scheduleGlow(true);
   });
 
   if (!reduceMotion) {
     let pointer = null;
+    const interiorImage = hero.querySelector(".hero__slide--interior .hero__bg");
+    let imageX = 0;
+    let imageY = 0;
 
     hero.addEventListener("pointermove", (e) => {
       const r = hero.getBoundingClientRect();
@@ -83,6 +109,13 @@
         const tilt = lamp.x * 0.08;
         lamp.el.style.transform = `translate(${lamp.x.toFixed(2)}px, ${lamp.y.toFixed(2)}px) rotate(${tilt.toFixed(2)}deg)`;
       });
+
+      const targetX = current === 1 && pointer ? pointer.x * 10 : 0;
+      const targetY = current === 1 && pointer ? pointer.y * 6 : 0;
+      imageX += (targetX - imageX) * 0.08;
+      imageY += (targetY - imageY) * 0.08;
+      interiorImage.style.transform = `translate3d(${imageX.toFixed(2)}px, ${imageY.toFixed(2)}px, 0)`;
+
       requestAnimationFrame(animateLamps);
     }
     requestAnimationFrame(animateLamps);
