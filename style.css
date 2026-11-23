@@ -290,10 +290,12 @@ button {
 }
 
 @keyframes lamp-bob {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
   }
@@ -375,13 +377,11 @@ button {
   position: absolute;
   inset: 0;
   clip-path: polygon(37% 0, 63% 0, 100% 100%, 0 100%);
-  background: radial-gradient(
-    ellipse 65% 95% at 50% 0,
-    rgba(255, 249, 219, 0.78) 0%,
-    rgba(255, 239, 190, 0.42) 38%,
-    rgba(255, 225, 166, 0.16) 68%,
-    transparent 100%
-  );
+  background: radial-gradient(ellipse 65% 95% at 50% 0,
+      rgba(255, 249, 219, 0.78) 0%,
+      rgba(255, 239, 190, 0.42) 38%,
+      rgba(255, 225, 166, 0.16) 68%,
+      transparent 100%);
 }
 
 .lamp[aria-pressed="true"] .lamp__face,
@@ -590,7 +590,7 @@ button {
   overflow: hidden;
 }
 
-.tile__media > img {
+.tile__media>img {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -599,15 +599,15 @@ button {
   will-change: transform;
 }
 
-.tile:hover .tile__media > img {
+.tile:hover .tile__media>img {
   transform: scale(1.1);
 }
 
-.tile--thoro .tile__media > img {
+.tile--thoro .tile__media>img {
   object-position: center 20%;
 }
 
-.tile--configurator .tile__media > img {
+.tile--configurator .tile__media>img {
   object-fit: contain;
   object-position: right center;
   top: 0;
@@ -616,7 +616,7 @@ button {
   height: 100%;
 }
 
-.tile--catalog .tile__media > img {
+.tile--catalog .tile__media>img {
   object-fit: contain;
   object-position: right bottom;
   left: 30%;
@@ -624,22 +624,24 @@ button {
   height: 100%;
 }
 
-.tile--app .tile__phone {
-  object-fit: contain;
-}
 
+/* Smaller interior phone, fading out at the bottom as in the Figma card. */
 .tile__phone--a {
-  left: 8%;
-  top: 0;
-  width: 45%;
-  height: 100%;
+  left: 13%;
+  top: 10%;
+  height: 50% !important;
+  width: auto !important;
+  object-fit: contain;
+  /* mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); */
 }
 
+/* Large lamp phone on the right, cropped by the card's bottom edge. */
 .tile__phone--b {
-  left: 42%;
-  top: 0;
-  width: 45%;
-  height: 100%;
+  left: 47%;
+  top: 25%;
+  width: 52% !important;
+  height: auto !important;
 }
 
 .tile__body {
@@ -808,7 +810,7 @@ button {
   padding-left: 0;
 }
 
-.footer__block + .footer__block {
+.footer__block+.footer__block {
   border-left: 1px solid #e5e5e5;
 }
 
@@ -870,6 +872,7 @@ button {
 /* ---------- Responsive ---------- */
 
 @media (max-width: 900px) {
+
   .container,
   .hero__content {
     width: calc(100% - 48px);
@@ -949,6 +952,7 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
